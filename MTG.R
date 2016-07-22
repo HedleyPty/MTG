@@ -6,8 +6,52 @@ source('Creatures.R')
 creatures <- data.frame(name=creat.name, cost=creat.cost, power=creat.power, thoughness=creat.toughness,
                         color=creat.color, text=creat.text, stringsAsFactors=F)
 rm(list= grep('^(i|creat\\.)', ls(), value=T))
-creatures.deck<-c()
-search.creature<-function(){
+player.deck<-c()
+enemy.deck<-c()
+adding.lands<-function(deck){
+  opt<-readline('Which basic land do you want to add to your deck? (pick a number)\n1-Plains\n2-Mountains\n3-Swamps\n4-Forests\n5-Islands\nx-Select any other option to exit: ')
+  if(opt=='1'){
+    opt<-readline('How many Plains do you want to have in your deck?: ')
+    if (grepl('\\d+', opt)){
+      deck <<-c(deck, rep('{W}', as.numeric(opt)))
+      opt <-readline('Do you want to select any other type of land? (pick a number)\n1-yes\nx-Press any other key to exit: ')
+      if (opt=='1')
+        adding.lands()
+    }else if(opt=='2'){
+      opt<-readline('How many Mountains do you want to have in your deck?: ')
+      if (grepl('\\d+', opt)){
+        deck <<-c(deck, rep('{R}', as.numeric(opt)))
+        opt<-readline('Do you want to select any other type of land? (pick a number)\n1-yes\nx-Press any other key to exit: ')
+        if (opt=='1')
+          adding.lands()
+      }
+    }else if(opt=='3'){
+      opt<-readline('How many Swamps do you want to have in your deck?: ')
+      if (grepl('\\d+', opt)){
+        deck <<-c(deck, rep('{B}', as.numeric(opt)))
+        opt<-readline('Do you want to select any other type of land? (pick a number)\n1-yes\nx-Press any other key to exit: ')
+        if (opt=='1')
+          adding.lands()
+      }
+    }else if(opt=='4'){
+      opt<-readline('How many Forests do you want to have in your deck?: ')
+      if (grepl('\\d+', opt)){
+        deck <<-c(deck, rep('{G}', as.numeric(opt)))
+        opt<-readline('Do you want to select any other type of land? (pick a number)\n1-yes\nx-Press any other key to exit: ')
+        if (opt=='1')
+          adding.lands()
+      }else if(opt=='5'){
+        opt<-readline('How many Islands do you want to have in your deck?: ')
+        if (grepl('\\d+', opt)){
+          deck <<-c(deck, rep('{U}', as.numeric(opt)))
+          opt<-readline('Do you want to select any other type of land? (pick a number)\n1-yes\nx-Press any other key to exit: ')
+          if (opt=='1')
+            adding.lands()
+        }
+      }
+    }
+}
+search.creature<-function(deck){
   opt<-readline('Select a creature?\n1-yes\npress any other key to exit: \n\n')
   creat.nam <-creatures$name
   if (opt=="1"){
@@ -30,7 +74,7 @@ search.creature<-function(){
     if (s=='1'){
       s<-readline('How many copies do you want in your deck?')
       
-      creatures.deck <<- c(creatures.deck, rep(as.numeric(s),selected.creature))
+      deck <<- c(deck, rep(as.numeric(s),selected.creature))
       search.creature()
     }else if(s=='2'){
       search.creature()
