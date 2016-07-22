@@ -9,6 +9,7 @@ creat.toughness<-c()
 creat.color<-c()
 creat.text<-c()
 for (i in cards.db){
+  if(length(i$types)>0){
   if (grepl("Creature", i$types)){
     creat.name <- c(creat.name, i$name)
     if(is.null(i$manaCost)){
@@ -28,5 +29,6 @@ for (i in cards.db){
     }else{
       creat.text <- c(creat.text, paste0(i$text, collapse = ","))}
   }
+}
 }
 
