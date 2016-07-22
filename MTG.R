@@ -40,24 +40,53 @@ search.creature<-function(){
   }
 }
 duel <- function(player.deck, enemy.deck){
-  player.deck <- player.deck[nrow(player.deck),]
-  enemy.deck <- enemy.deck[nrow(enemy.deck),]
+  player.deck <- player.deck[sample(1:length(player.deck), n=length(player.deck), replace = F)]
+  enemy.deck  <- enemy.deck[sample(1:length(enemy.deck), n=length(enemy.deck), replace=F)]
   
   hand.player <- player.deck[1:7]
   hand.enemy <- player.enemy[1:7]
+  hands<-list(hand.player, hand.enemy)
   player.deck <- player.deck[-(1:7)]
   enemy.deck <- enemy.deck[-(1:7)]
   decks <- list(player.deck, enemy.deck)
-  creatures.battlefield <- list()
-  lands <- list()
+  creatures.battlefield <- list(c(), c())
+  creatures.tapped <- list(c(), c())
+  lands <- list(c(), c())
+  lands.tapped <- list(c(), c())
   cementery <- list()
   lives <- c(20, 20)
   
   while (all(lives) > 0){
    for (i in 1:2){
-     mana <- 0
+    mana <- c(0,0)
     #Upkeep
+    #Untap
+    for (x in creatures.tapped){
+      if(length(x) > 0){
+        for (j in 1:length(x))
+        {
+          x[j]<-F
+        }
+      }
+    }
+    for (w in lands.tapped){
+      if(length(w) > 0){
+        for (j in 1:length(w))
+        {
+          w[j]<-F
+        }
+      }
+    }
+    rm(list=c('x','w'))
     #Drawing a card
+    hands[[i]]<-c(hands[[i]], decks[[i]][1])
+    decks[[i]]<- decks[[i]][-1]
+    if (any(grepl('Land: ', hands[[i]]))){
+      l<-min(grep('Land: ', hands[[i]]))
+      lands[[i]]<- c(lands[[i]], hands[[i]][l]  )
+      hands[[i]]<-hands[[i]][-l]
+      lands.tapped[[i]]<-c(lands.tapped[[i]], F)
+    }
    }
   }
 }
