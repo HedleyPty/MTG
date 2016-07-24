@@ -86,7 +86,8 @@ adding.lands<-function(deck){
     }
 }
 }
-duel <- function(player.deck, enemy.deck){
+duel <- function(player.deck, enemy.deck, N=1000, duels=c()){
+  if(N < 0){
   player.deck <- player.deck[sample(1:length(player.deck), n=length(player.deck), replace = F)]
   enemy.deck  <- enemy.deck[sample(1:length(enemy.deck), n=length(enemy.deck), replace=F)]
   
@@ -135,5 +136,14 @@ duel <- function(player.deck, enemy.deck){
       lands.tapped[[i]]<-c(lands.tapped[[i]], F)
     }
    }
+  }
+  N <- N -1 
+  win<-ifelse(lives[1] > 0, 1,0)
+  if(length(duels) > 0){
+  duels<- c(duels,win)
+  }else{
+    duels<-win  
+  }
+  duel(player.deck, enemy.deck, N)
   }
 }
